@@ -71,11 +71,15 @@ public class WebServer {
         taskContext.setHandler(this::handleTaskRequest);
         homePageContext.setHandler(this::handleRequestForAsset);
 
+
+
         server.setExecutor(Executors.newFixedThreadPool(8));
         server.start();
     }
 
     private void handleRequestForAsset(HttpExchange exchange) throws IOException {
+        System.out.println("Petición GET para asset recibida: " + exchange.getRequestURI().getPath());
+
         if (!exchange.getRequestMethod().equalsIgnoreCase("get")) {
             exchange.close();
             return;
@@ -115,6 +119,7 @@ public class WebServer {
     }
 
     private void handleTaskRequest(HttpExchange exchange) throws IOException {
+        System.out.println("Petición POST recibida en /procesar_datos");
         if (!exchange.getRequestMethod().equalsIgnoreCase("post")) { 
             exchange.close();
             return;
@@ -135,6 +140,7 @@ public class WebServer {
     }
 
     private void handleStatusCheckRequest(HttpExchange exchange) throws IOException {
+        System.out.println("Petición GET recibida en /status");
         if (!exchange.getRequestMethod().equalsIgnoreCase("get")) {
             exchange.close();
             return;
@@ -145,6 +151,7 @@ public class WebServer {
     }
 
     private void sendResponse(byte[] responseBytes, HttpExchange exchange) throws IOException {
+        System.out.println("Enviando respuesta, tamaño: " + responseBytes.length + " bytes");
         exchange.sendResponseHeaders(200, responseBytes.length);
         OutputStream outputStream = exchange.getResponseBody();
         outputStream.write(responseBytes);
